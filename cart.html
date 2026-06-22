@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Cart | A&T Signatures</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Great+Vibes&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<link rel="icon" href="logo.png"/>
+
+<style>
+/* ═══════════════════════════════════════════
+   BASE
+═══════════════════════════════════════════ */
+*{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth;}
+body{background:#050505;color:#fff;overflow-x:hidden;font-family:'Montserrat',sans-serif;}
+::-webkit-scrollbar{width:7px;}
+::-webkit-scrollbar-thumb{background:#d4af37;border-radius:20px;}
+::selection{background:#d4af37;color:#000;}
+:root{
+  --gold:#d4af37;
+  --gold-dim:rgba(212,175,55,0.12);
+  --gold-glow:rgba(212,175,55,0.35);
+  --dark:#050505;
+  --dark2:#0d0d0d;
+  --dark3:#111;
+}
+a{text-decoration:none;color:inherit;}
+img{display:block;}
+
+/* ═══════════════════════════════════════════
+   ANNOUNCEMENT BAR
+═══════════════════════════════════════════ */
+.announce-bar{
+  background:var(--gold);color:#000;
+  padding:10px 20px;text-align:center;
+  font-size:13px;font-weight:600;letter-spacing:1.5px;
+  position:relative;z-index:1001;
+  overflow:hidden;
+}
+.announce-track{
+  display:inline-flex;gap:80px;
+  animation:announceTick 22s linear infinite;
+  white-space:nowrap;
+}
+.announce-track span{display:flex;align-items:center;gap:8px;}
+.announce-track span i{font-size:14px;}
+@keyframes announceTick{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+
+/* ═══════════════════════════════════════════
+   NAVBAR
+═══════════════════════════════════════════ */
+nav{
+  width:100%;padding:14px 6%;
+  display:flex;justify-content:space-between;align-items:center;
+  position:sticky;top:0;left:0;z-index:1000;
+  background:rgba(5,5,5,0.96);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(212,175,55,0.1);
+  transition:box-shadow 0.4s;
+}
+nav.scrolled{box-shadow:0 4px 30px rgba(0,0,0,0.9);}
+
+.logo{display:flex;align-items:center;gap:12px;}
+.logo img{width:52px;height:52px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);box-shadow:0 0 16px var(--gold-glow);}
+.logo-text h2{font-family:'Cinzel',serif;color:var(--gold);font-size:26px;font-weight:700;letter-spacing:2px;line-height:1;}
+.logo-text span{font-family:'Great Vibes',cursive;color:#fff;font-size:22px;letter-spacing:1px;line-height:1;}
+
+/* Desktop nav */
+.nav-links{display:flex;list-style:none;align-items:center;gap:28px;}
+.nav-links > li{position:relative;}
+.nav-links > li > a{
+  font-size:13px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;
+  color:#ddd;transition:color 0.3s;display:flex;align-items:center;gap:5px;padding:6px 0;
+}
+.nav-links > li > a:hover{color:var(--gold);}
+.nav-links > li > a::after{content:'';position:absolute;width:0%;height:1px;background:var(--gold);left:0;bottom:0;transition:0.4s;}
+.nav-links > li > a:hover::after{width:100%;}
+
+/* Dropdown */
+.has-drop:hover .dropdown{opacity:1;pointer-events:all;transform:translateY(0);}
+.dropdown{
+  position:absolute;top:calc(100% + 14px);left:0;
+  background:#0d0d0d;border:1px solid rgba(212,175,55,0.15);
+  border-radius:16px;padding:14px 0;min-width:200px;
+  opacity:0;pointer-events:none;
+  transform:translateY(10px);transition:0.3s;
+  box-shadow:0 20px 50px rgba(0,0,0,0.8);z-index:999;
+}
+.dropdown a{
+  display:block;padding:10px 22px;font-size:13px;color:#bbb;
+  letter-spacing:1px;transition:0.3s;
+}
+.dropdown a:hover{color:var(--gold);padding-left:28px;}
+
+/* Cart & Icons */
+.nav-icons{display:flex;align-items:center;gap:18px;}
+.nav-icon-btn{
+  background:none;border:none;color:#ddd;font-size:18px;
+  cursor:pointer;transition:color 0.3s;position:relative;
+}
+.nav-icon-btn:hover{color:var(--gold);}
+.cart-badge{
+  position:absolute;top:-8px;right:-10px;
+  background:var(--gold);color:#000;font-size:10px;font-weight:700;
+  width:18px;height:18px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+}
+.cart-badge.pop{animation:pop 0.3s ease;}
+@keyframes pop{50%{transform:scale(1.5);}}
+
+/* Hamburger */
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;}
+.hamburger span{display:block;width:24px;height:2px;background:var(--gold);border-radius:3px;transition:0.4s;}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+/* Mobile menu */
+.mobile-menu{
+  position:fixed;inset:0;background:rgba(0,0,0,0.97);backdrop-filter:blur(20px);
+  z-index:998;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:32px;
+  transform:translateX(100%);transition:transform 0.4s ease;
+}
+.mobile-menu.open{transform:translateX(0);}
+.mobile-menu a{
+  font-family:'Cinzel',serif;font-size:20px;letter-spacing:3px;text-transform:uppercase;
+  color:#fff;transition:color 0.3s;
+}
+.mobile-menu a:hover{color:var(--gold);}
+
+/* Navbar Responsive */
+@media(max-width:768px){
+  .nav-links,.nav-icons{display:none;}
+  .hamburger{display:flex;}
+}
+
+/* ── HERO ── */
+.cart-hero{
+    width:100%;
+    height:55vh;
+    background:
+        linear-gradient(rgba(0,0,0,0.65),rgba(0,0,0,0.82)),
+        url('https://images.unsplash.com/photo-1595425970377-c9703cf48b6d?q=80&w=1600') center/cover;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    position:relative;
+    padding-top:90px;
+}
+
+.cart-hero::before{
+    content:'';
+    position:absolute;
+    width:500px; height:500px;
+    background:radial-gradient(circle,#d4af3720 0%,transparent 70%);
+    top:50%; left:50%;
+    transform:translate(-50%,-50%);
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+    animation:fadeUp 1.2s ease;
+}
+
+.hero-content h1{
+    font-family:'Cinzel',serif;
+    font-size:75px;
+    color:#d4af37;
+    font-weight:700;
+    letter-spacing:4px;
+    margin-bottom:10px;
+    text-shadow:0 0 30px rgba(212,175,55,0.3);
+}
+
+.hero-sub{
+    font-family:'Great Vibes',cursive;
+    font-size:42px;
+    color:#fff;
+    letter-spacing:1px;
+}
+
+/* ── CART SECTION ── */
+.cart-section{
+    padding:100px 8% 80px;
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:40px;
+    align-items:start;
+}
+
+/* ── CART ITEMS PANEL ── */
+.cart-items{
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(212,175,55,0.15);
+    border-radius:28px;
+    padding:40px;
+    backdrop-filter:blur(10px);
+}
+
+.panel-title{
+    font-family:'Cinzel',serif;
+    font-size:32px;
+    color:#d4af37;
+    margin-bottom:35px;
+    letter-spacing:2px;
+    border-bottom:1px solid rgba(212,175,55,0.2);
+    padding-bottom:20px;
+}
+
+/* ── SINGLE ITEM ── */
+.cart-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:25px;
+    padding:28px 0;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+    transition:0.3s;
+}
+
+.cart-item:last-child{ border-bottom:none; }
+
+.item-left{
+    display:flex;
+    align-items:center;
+    gap:22px;
+}
+
+.item-left img{
+    width:115px; height:115px;
+    object-fit:cover;
+    border-radius:18px;
+    border:1px solid rgba(212,175,55,0.2);
+    box-shadow:0 8px 25px rgba(0,0,0,0.4);
+    flex-shrink:0;
+}
+
+.item-info h3{
+    font-family:'Cinzel',serif;
+    font-size:20px;
+    color:#fff;
+    margin-bottom:7px;
+    letter-spacing:1px;
+}
+
+.item-info p{
+    color:#aaa;
+    font-size:13px;
+    font-weight:400;
+    margin-bottom:10px;
+}
+
+.item-price{
+    color:#d4af37;
+    font-size:22px;
+    font-weight:700;
+}
+
+.remove-btn{
+    background:none;
+    border:1px solid rgba(255,77,77,0.35);
+    color:#ff6b6b;
+    cursor:pointer;
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    padding:6px 16px;
+    border-radius:30px;
+    margin-top:12px;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    transition:0.3s;
+    font-family:'Montserrat',sans-serif;
+}
+
+.remove-btn:hover{
+    background:rgba(255,77,77,0.12);
+    border-color:#ff6b6b;
+}
+
+/* ── QUANTITY CONTROL ── */
+.qty-wrap{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:14px;
+    flex-shrink:0;
+}
+
+.quantity{
+    display:flex;
+    align-items:center;
+    gap:0;
+    border:1px solid rgba(212,175,55,0.3);
+    border-radius:40px;
+    overflow:hidden;
+}
+
+.quantity button{
+    width:38px; height:38px;
+    border:none;
+    background:transparent;
+    color:#d4af37;
+    cursor:pointer;
+    font-size:18px;
+    font-weight:700;
+    transition:0.3s;
+    line-height:1;
+}
+
+.quantity button:hover{ background:rgba(212,175,55,0.15); }
+
+.quantity .qty-num{
+    font-size:16px;
+    font-weight:700;
+    color:#fff;
+    min-width:34px;
+    text-align:center;
+}
+
+.item-subtotal{
+    font-size:13px;
+    color:#888;
+    text-align:center;
+    font-weight:500;
+}
+
+/* ── EMPTY CART STATE ── */
+.empty-cart{
+    text-align:center;
+    padding:70px 20px;
+    display:none;
+}
+
+.empty-cart i{
+    font-size:70px;
+    color:rgba(212,175,55,0.25);
+    margin-bottom:25px;
+}
+
+.empty-cart h3{
+    font-family:'Cinzel',serif;
+    font-size:28px;
+    color:#d4af37;
+    margin-bottom:12px;
+}
+
+.empty-cart p{
+    color:#888;
+    font-size:15px;
+    margin-bottom:30px;
+}
+
+/* ── SUMMARY PANEL ── */
+.cart-summary{
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(212,175,55,0.15);
+    border-radius:28px;
+    padding:40px;
+    backdrop-filter:blur(10px);
+    position:sticky;
+    top:110px;
+}
+
+.cart-summary .panel-title{ margin-bottom:30px; }
+
+.summary-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:14px 0;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+    font-size:15px;
+    color:#ccc;
+}
+
+.summary-row span:last-child{ color:#fff; font-weight:500; }
+
+.summary-row.total{
+    border-bottom:none;
+    border-top:1px solid rgba(212,175,55,0.25);
+    margin-top:10px;
+    padding-top:20px;
+    font-size:20px;
+    font-weight:700;
+    color:#fff;
+}
+
+.summary-row.total span:last-child{
+    color:#d4af37;
+    font-size:24px;
+}
+
+.checkout-btn{
+    width:100%;
+    padding:17px;
+    border:none;
+    border-radius:50px;
+    background:#d4af37;
+    color:#000;
+    font-size:15px;
+    font-weight:700;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    cursor:pointer;
+    transition:0.4s;
+    margin-top:30px;
+    font-family:'Montserrat',sans-serif;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+}
+
+.checkout-btn:hover{
+    background:white;
+    transform:translateY(-4px);
+    box-shadow:0 15px 40px rgba(255,255,255,0.12);
+}
+
+.secure-note{
+    text-align:center;
+    margin-top:20px;
+    color:#666;
+    font-size:12px;
+    letter-spacing:0.5px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+}
+
+.secure-note i{ color:#d4af37; font-size:13px; }
+
+/* promo code */
+.promo-wrap{
+    display:flex;
+    gap:10px;
+    margin:25px 0;
+}
+
+.promo-wrap input{
+    flex:1;
+    padding:12px 18px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(212,175,55,0.2);
+    border-radius:40px;
+    color:#fff;
+    font-family:'Montserrat',sans-serif;
+    font-size:14px;
+    outline:none;
+    transition:0.3s;
+}
+
+.promo-wrap input::placeholder{ color:#666; }
+.promo-wrap input:focus{ border-color:#d4af37; }
+
+.promo-wrap button{
+    padding:12px 22px;
+    border:1px solid #d4af37;
+    background:transparent;
+    color:#d4af37;
+    border-radius:40px;
+    font-family:'Montserrat',sans-serif;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:1px;
+    cursor:pointer;
+    transition:0.3s;
+    text-transform:uppercase;
+    white-space:nowrap;
+}
+
+.promo-wrap button:hover{ background:#d4af37; color:#000; }
+
+/* continue shopping link */
+.continue-link{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    color:#d4af37;
+    text-decoration:none;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    margin-top:30px;
+    transition:0.3s;
+}
+
+.continue-link:hover{ gap:14px; }
+
+/* ═══════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════ */
+footer{background:#000;border-top:1px solid rgba(212,175,55,0.08);padding:60px 6% 30px;}
+.footer-top{
+  display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:50px;
+  padding-bottom:50px;border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.footer-brand .logo{margin-bottom:18px;display:inline-flex;}
+.footer-brand p{font-size:13px;color:#555;line-height:1.9;max-width:260px;}
+.footer-col h4{font-family:'Cinzel',serif;color:var(--gold,#d4af37);font-size:14px;letter-spacing:2px;margin-bottom:20px;}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:10px;}
+.footer-col ul li a{font-size:13px;color:#555;transition:color 0.3s;letter-spacing:0.5px;text-decoration:none;}
+.footer-col ul li a:hover{color:var(--gold,#d4af37);}
+.footer-socials{display:flex;gap:12px;margin-top:22px;}
+.footer-socials a{
+  width:38px;height:38px;border-radius:50%;border:1px solid rgba(212,175,55,0.2);
+  display:flex;align-items:center;justify-content:center;color:var(--gold,#d4af37);
+  font-size:15px;transition:0.3s;text-decoration:none;
+}
+.footer-socials a:hover{background:var(--gold,#d4af37);color:#000;border-color:var(--gold,#d4af37);}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;padding-top:28px;}
+.footer-bottom p{font-size:12px;color:#333;letter-spacing:1px;}
+.footer-bottom span{color:var(--gold,#d4af37);font-family:'Cinzel',serif;}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{
+    from{ opacity:0; transform:translateY(40px); }
+    to{ opacity:1; transform:translateY(0); }
+}
+
+.cart-item{
+    animation:fadeUp 0.5s ease both;
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1000px){
+    .cart-section{
+        grid-template-columns:1fr;
+    }
+    .cart-summary{
+        position:static;
+    }
+}
+
+@media(max-width:768px){
+
+    .hero-content h1{ font-size:48px; }
+    .hero-sub{ font-size:32px; }
+    .cart-section{ padding:80px 5% 60px; }
+    .cart-items{ padding:28px 20px; }
+    .cart-summary{ padding:28px 20px; }
+    .cart-item{ flex-direction:column; align-items:flex-start; }
+    .qty-wrap{ flex-direction:row; align-items:center; }
+    .item-left img{ width:90px; height:90px; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ═══════ ANNOUNCEMENT BAR ═══════ -->
+<div class="announce-bar">
+  <div class="announce-track">
+    <span><i class="fas fa-truck-fast"></i> Free Delivery on Orders Above Rs 3,000</span>
+    <span><i class="fas fa-rotate-left"></i> 7-Day Easy Return &amp; Exchange Policy</span>
+    <span><i class="fas fa-flask"></i> 100% Alcohol-Free Premium Attars</span>
+    <span><i class="fas fa-shield-halved"></i> Authentic Arabian Fragrance Oils</span>
+    <!-- duplicate for seamless loop -->
+    <span><i class="fas fa-truck-fast"></i> Free Delivery on Orders Above Rs 3,000</span>
+    <span><i class="fas fa-rotate-left"></i> 7-Day Easy Return &amp; Exchange Policy</span>
+    <span><i class="fas fa-flask"></i> 100% Alcohol-Free Premium Attars</span>
+    <span><i class="fas fa-shield-halved"></i> Authentic Arabian Fragrance Oils</span>
+  </div>
+</div>
+
+<!-- ═══════ NAVBAR ═══════ -->
+<nav id="navbar">
+  <a href="index.html" class="logo">
+    <img src="logo.png" alt="A&T Royal">
+    <div class="logo-text">
+      <h2>A&amp;T</h2>
+      <span>Royal</span>
+    </div>
+  </a>
+
+  <ul class="nav-links" id="desktopNav">
+    <li><a href="index.html">Home</a></li>
+    <li class="has-drop">
+      <a href="collection.html">Shop <i class="fas fa-chevron-down" style="font-size:10px;"></i></a>
+      <div class="dropdown">
+        <a href="collection.html">All Products</a>
+        <a href="collection.html">Best Sellers</a>
+        <a href="collection.html">New Arrivals</a>
+        <a href="coming-soon.html">Coming Soon</a>
+      </div>
+    </li>
+    <li><a href="collection.html">Bestsellers</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="faq.html">FAQ</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+
+  <div class="nav-icons" id="navIcons">
+    <button class="nav-icon-btn" onclick="toggleSearch()" aria-label="Search"><i class="fas fa-search"></i></button>
+    <a href="#" onclick="toggleCart(); return false;" class="nav-icon-btn" aria-label="Cart" style="position:relative;">
+      <i class="fas fa-bag-shopping"></i>
+      <span class="cart-badge" id="cartBadge">0</span>
+    </a>
+    <a href="https://wa.me/923257553992" target="_blank" class="nav-icon-btn" style="color:#25d366;" aria-label="WhatsApp">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+  </div>
+
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html" onclick="toggleMenu()">Home</a>
+  <a href="collection.html" onclick="toggleMenu()">Shop</a>
+  <a href="collection.html" onclick="toggleMenu()">Bestsellers</a>
+  <a href="about.html" onclick="toggleMenu()">About</a>
+  <a href="faq.html" onclick="toggleMenu()">FAQ</a>
+  <a href="contact.html" onclick="toggleMenu()">Contact</a>
+  <a href="cart.html" onclick="toggleMenu()">Cart</a>
+</div>
+
+
+
+<!-- HERO -->
+<section class="cart-hero">
+    <div class="hero-content">
+        <h1>Your Cart</h1>
+        <div class="hero-sub">Luxury Awaits You</div>
+    </div>
+</section>
+
+<!-- CART SECTION -->
+<section class="cart-section">
+
+    <!-- LEFT: CART ITEMS -->
+    <div class="cart-items">
+
+        <h2 class="panel-title">
+            <i class="fa-solid fa-bag-shopping" style="margin-right:12px;font-size:26px;"></i>
+            Shopping Cart
+        </h2>
+
+        <div id="cart-list"></div>
+
+        <!-- Empty state (hidden by default) -->
+        <div class="empty-cart" id="empty-state">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <h3>Your Cart is Empty</h3>
+            <p>Looks like you haven't added any luxury fragrances yet.</p>
+        </div>
+
+        <a href="collection.html" class="continue-link">
+            <i class="fa-solid fa-arrow-left"></i> Continue Shopping
+        </a>
+
+    </div>
+
+    <!-- RIGHT: ORDER SUMMARY -->
+    <div class="cart-summary">
+
+        <h2 class="panel-title">
+            <i class="fa-solid fa-receipt" style="margin-right:12px;font-size:24px;"></i>
+            Order Summary
+        </h2>
+
+        <!-- Promo Code -->
+        <div class="promo-wrap">
+            <input type="text" id="promo-input" placeholder="Promo code">
+            <button onclick="applyPromo()">Apply</button>
+        </div>
+
+        <div class="summary-row">
+            <span>Subtotal (<span id="item-count">4</span> items)</span>
+            <span id="subtotal-val">PKR 57,600</span>
+        </div>
+        <div class="summary-row">
+            <span>Shipping</span>
+            <span id="shipping-val">PKR 300</span>
+        </div>
+        <div class="summary-row">
+            <span>Tax (0%)</span>
+            <span id="tax-val">PKR 0</span>
+        </div>
+        <div class="summary-row" id="discount-row" style="display:none;color:#d4af37;">
+            <span>Discount</span>
+            <span id="discount-val">-PKR 0</span>
+        </div>
+
+        <div class="summary-row total">
+            <span>Total</span>
+            <span id="total-val">PKR 57,900</span>
+        </div>
+
+        <button class="checkout-btn" onclick="pageCheckout()">
+            <i class="fa-solid fa-lock"></i>
+            Proceed to Checkout
+        </button>
+
+        <p class="secure-note">
+            <i class="fa-solid fa-shield-halved"></i>
+            Secure & Encrypted Payment
+        </p>
+
+    </div>
+
+</section>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="index.html" class="logo">
+        <img src="logo.png" alt="A&T Royal" style="width:46px;height:46px;border-radius:50%;border:2px solid var(--gold);">
+        <div class="logo-text" style="margin-left:12px;">
+          <h2 style="font-family:'Cinzel',serif;color:var(--gold);font-size:22px;">A&amp;T</h2>
+          <span style="font-family:'Great Vibes',cursive;color:#fff;font-size:18px;">Royal</span>
+        </div>
+      </a>
+      <p style="margin-top:16px;">Premium Arabian attars crafted with elegance. 100% alcohol-free and long-lasting fragrance for every personality.</p>
+      <div class="footer-socials">
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-whatsapp"></i></a>
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-tiktok"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="collection.html">All Products</a></li>
+        <li><a href="collection.html">Best Sellers</a></li>
+        <li><a href="collection.html">New Arrivals</a></li>
+        <li><a href="coming-soon.html">Coming Soon</a></li>
+      </ul>
+    </div>
+    
+    <div class="footer-col">
+      <h4>Help</h4>
+      <ul>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="#">Return Policy</a></li>
+        <li><a href="#">Shipping Info</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 <span>A&amp;T Royal</span> | All Rights Reserved | Crafted with Luxury</p>
+    <p style="color:#333;font-size:12px;">Gujranawala, Pakistan</p>
+  </div>
+</footer>
+
+<script>
+const SHIPPING = 300;
+const TAX_RATE = 0;
+let discount = 0;
+let pageCart = JSON.parse(localStorage.getItem('cart')) || [];
+
+function savePageCart() {
+    localStorage.setItem('cart', JSON.stringify(pageCart));
+    renderCartPage();
+    // This will sync with renderProducts.js
+    if(typeof updateCartUI === 'function') updateCartUI();
+}
+
+function renderCartPage() {
+    const list = document.getElementById('cart-list');
+    const emptyState = document.getElementById('empty-state');
+    
+    list.innerHTML = '';
+    let subtotal = 0;
+    let count = 0;
+    
+    if(pageCart.length === 0) {
+        emptyState.style.display = 'block';
+    } else {
+        emptyState.style.display = 'none';
+        
+        pageCart.forEach((item, index) => {
+            const itemTotal = item.price * item.quantity;
+            subtotal += itemTotal;
+            count += item.quantity;
+            
+            list.innerHTML += `
+            <div class="cart-item">
+                <div class="item-left">
+                    <img src="${item.image}" alt="${item.name}">
+                    <div class="item-info">
+                        <h3>${item.name}</h3>
+                        <p>Variant: ${item.size}</p>
+                        <div class="item-price">PKR ${item.price.toLocaleString('en-PK')}</div>
+                        <button class="remove-btn" onclick="removePageItem(${index})">
+                            <i class="fa-solid fa-xmark"></i> Remove
+                        </button>
+                    </div>
+                </div>
+                <div class="qty-wrap">
+                    <div class="quantity">
+                        <button onclick="changePageQty(${index}, -1)">−</button>
+                        <span class="qty-num">${item.quantity}</span>
+                        <button onclick="changePageQty(${index}, 1)">+</button>
+                    </div>
+                    <div class="item-subtotal">PKR ${itemTotal.toLocaleString('en-PK')}</div>
+                </div>
+            </div>
+            `;
+        });
+    }
+    
+    const shipping = pageCart.length > 0 ? SHIPPING : 0;
+    const tax = subtotal * TAX_RATE;
+    const total = subtotal + shipping + tax - discount;
+
+    document.getElementById('item-count').textContent = count;
+    document.getElementById('subtotal-val').textContent = 'PKR ' + subtotal.toLocaleString('en-PK');
+    document.getElementById('shipping-val').textContent = pageCart.length > 0 ? 'PKR ' + shipping : 'Free';
+    document.getElementById('tax-val').textContent = 'PKR ' + tax;
+    document.getElementById('total-val').textContent = 'PKR ' + Math.max(0, total).toLocaleString('en-PK');
+    
+    const badge = document.getElementById('cartBadge');
+    if(badge) badge.textContent = count;
+    
+    if(discount > 0){
+        document.getElementById('discount-row').style.display = 'flex';
+        document.getElementById('discount-val').textContent = '-PKR ' + discount.toLocaleString('en-PK');
+    }
+}
+
+function changePageQty(index, delta) {
+    pageCart[index].quantity += delta;
+    if(pageCart[index].quantity < 1) pageCart[index].quantity = 1;
+    savePageCart();
+}
+
+function removePageItem(index) {
+    pageCart.splice(index, 1);
+    savePageCart();
+}
+
+function applyPromo() {
+    const code = document.getElementById('promo-input').value.trim().toUpperCase();
+    if(code === 'AT10'){
+        discount = 1000;
+        renderCartPage();
+        document.getElementById('promo-input').style.borderColor = '#d4af37';
+        document.getElementById('promo-input').value = 'AT10 — Applied ✓';
+    } else {
+        document.getElementById('promo-input').style.borderColor = '#ff6b6b';
+        document.getElementById('promo-input').value = '';
+        document.getElementById('promo-input').placeholder = 'Invalid code';
+    }
+}
+
+function pageCheckout() {
+    if(pageCart.length === 0) return;
+    
+    let msg = "Hello A&T Royal, I would like to place an order:\n\n";
+    let subtotal = 0;
+    
+    pageCart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
+        msg += `${item.quantity}x ${item.name} (${item.size}) - PKR ${itemTotal.toLocaleString('en-PK')}\n`;
+    });
+    
+    const shipping = SHIPPING;
+    const tax = subtotal * TAX_RATE;
+    const total = subtotal + shipping + tax - discount;
+    
+    msg += `\nSubtotal: PKR ${subtotal.toLocaleString('en-PK')}`;
+    msg += `\nShipping: PKR ${shipping.toLocaleString('en-PK')}`;
+    if (discount > 0) msg += `\nDiscount: -PKR ${discount.toLocaleString('en-PK')}`;
+    msg += `\n*Grand Total: PKR ${total.toLocaleString('en-PK')}*`;
+    
+    window.open(`https://wa.me/923257553992?text=${encodeURIComponent(msg)}`, "_blank");
+}
+
+/* Navbar scroll effect */
+window.addEventListener('scroll',function(){
+    const nav = document.getElementById('navbar');
+    if(nav) {
+        if(window.scrollY > 50) nav.classList.add('scrolled');
+        else nav.classList.remove('scrolled');
+    }
+});
+
+document.addEventListener("DOMContentLoaded", renderCartPage);
+</script>
+
+<script src="js/renderProducts.js"></script>
+</body>
+</html>

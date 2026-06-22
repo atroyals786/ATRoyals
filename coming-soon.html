@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>A&T Royal | Coming Soon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Great+Vibes&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<link rel="icon" href="logo.png"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  background:#050505;color:#fff;
+  font-family:'Montserrat',sans-serif;
+  overflow-x:hidden;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  background:linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=1800') center/cover;
+}
+:root{
+  --gold:#d4af37;
+}
+.header{
+  padding:30px 6%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none;}
+.logo img{width:52px;height:52px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);}
+.logo-text h2{font-family:'Cinzel',serif;color:var(--gold);font-size:26px;font-weight:700;letter-spacing:2px;line-height:1;}
+.logo-text span{font-family:'Great Vibes',cursive;color:#fff;font-size:22px;letter-spacing:1px;line-height:1;}
+
+.back-btn{
+  color:#fff;text-decoration:none;font-size:14px;letter-spacing:1.5px;
+  text-transform:uppercase;border-bottom:1px solid rgba(212,175,55,0.4);
+  padding-bottom:4px;transition:0.3s;
+}
+.back-btn:hover{color:var(--gold);}
+
+.content{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:40px 6%;
+}
+
+.eyebrow{
+  font-family:'Great Vibes',cursive;
+  color:var(--gold);
+  font-size:42px;
+  margin-bottom:10px;
+}
+h1{
+  font-family:'Cinzel',serif;
+  font-size:72px;
+  color:#fff;
+  letter-spacing:6px;
+  margin-bottom:30px;
+  line-height:1;
+}
+
+.countdown{
+  display:flex;
+  gap:30px;
+  margin-bottom:50px;
+}
+.tile{
+  background:rgba(0,0,0,0.6);
+  border:1px solid rgba(212,175,55,0.3);
+  backdrop-filter:blur(10px);
+  padding:25px 30px;
+  border-radius:16px;
+  min-width:120px;
+}
+.tile span{
+  display:block;
+  font-family:'Cinzel',serif;
+  font-size:48px;
+  font-weight:700;
+  color:var(--gold);
+}
+.tile small{
+  font-size:12px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:#aaa;
+}
+
+.notify-form{
+  display:flex;
+  gap:10px;
+  max-width:500px;
+  width:100%;
+}
+.notify-form input{
+  flex:1;
+  padding:16px 24px;
+  border-radius:50px;
+  border:1px solid rgba(212,175,55,0.4);
+  background:rgba(255,255,255,0.05);
+  color:#fff;
+  font-family:'Montserrat',sans-serif;
+  outline:none;
+}
+.notify-form input::placeholder{color:#888;}
+.notify-form button{
+  padding:16px 36px;
+  border-radius:50px;
+  border:none;
+  background:var(--gold);
+  color:#000;
+  font-family:'Montserrat',sans-serif;
+  font-weight:700;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:0.3s;
+}
+.notify-form button:hover{background:#fff;}
+
+@media(max-width:768px){
+  h1{font-size:48px;}
+  .countdown{gap:15px;flex-wrap:wrap;justify-content:center;}
+  .tile{min-width:90px;padding:15px 20px;}
+  .tile span{font-size:32px;}
+  .notify-form{flex-direction:column;}
+  .notify-form button{width:100%;}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a href="index.html" class="logo">
+    <img src="logo.png" alt="A&T Royal">
+    <div class="logo-text">
+      <h2>A&amp;T</h2>
+      <span>Royal</span>
+    </div>
+  </a>
+  <a href="womens-collection.html" class="back-btn">Return Back</a>
+</div>
+
+<div class="content">
+  <div class="eyebrow">Something Beautiful Is</div>
+  <h1>Coming Soon</h1>
+  
+  <div class="countdown">
+    <div class="tile"><span id="days">15</span><small>Days</small></div>
+    <div class="tile"><span id="hours">00</span><small>Hours</small></div>
+    <div class="tile"><span id="mins">00</span><small>Mins</small></div>
+    <div class="tile"><span id="secs">00</span><small>Secs</small></div>
+  </div>
+
+  <p style="margin-bottom:20px;color:#ccc;letter-spacing:1px;">Get notified when we launch our most exclusive collection.</p>
+  
+  <div class="notify-form">
+    <input type="email" placeholder="Enter your email address">
+    <button>Notify Me</button>
+  </div>
+</div>
+
+<script>
+function initComingSoonCountdown() {
+  let endTime = localStorage.getItem('comingSoonEnd');
+  const now = new Date().getTime();
+  
+  if (!endTime || now > parseInt(endTime)) {
+    endTime = now + 15 * 24 * 60 * 60 * 1000;
+    localStorage.setItem('comingSoonEnd', endTime);
+  }
+
+  function update() {
+    const current = new Date().getTime();
+    const diff = parseInt(endTime) - current;
+    
+    if (diff <= 0) {
+      localStorage.removeItem('comingSoonEnd');
+      return;
+    }
+    
+    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const s = Math.floor((diff % (1000 * 60)) / 1000);
+    
+    document.getElementById('days').textContent = d.toString().padStart(2, '0');
+    document.getElementById('hours').textContent = h.toString().padStart(2, '0');
+    document.getElementById('mins').textContent = m.toString().padStart(2, '0');
+    document.getElementById('secs').textContent = s.toString().padStart(2, '0');
+  }
+
+  setInterval(update, 1000);
+  update();
+}
+initComingSoonCountdown();
+</script>
+
+<script src="js/renderProducts.js"></script>
+</body>
+</html>
