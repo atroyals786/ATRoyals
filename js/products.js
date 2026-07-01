@@ -86,7 +86,7 @@ const products = [
   },
   {
     id: 'trio-royals',
-    name: 'Trio Set',
+    name: ' Premium Trio Set',
     category: 'Signature Collection',
     badge: 'Best Seller',
     badgeClass: '',
